@@ -8,15 +8,20 @@ import {
   incrementAsync,
   incrementIfOdd,
   selectCount,
+  todoAsync
 } from './counterSlice';
 import styles from './Counter.module.css';
+import { useSelector } from 'react-redux';
 
 export function Counter() {
   const count = useAppSelector(selectCount);
+  const state = useSelector(state => state);
   const dispatch = useAppDispatch();
   const [incrementAmount, setIncrementAmount] = useState('2');
 
   const incrementValue = Number(incrementAmount) || 0;
+
+  console.log('state: ', state)
 
   return (
     <div>
@@ -61,6 +66,13 @@ export function Counter() {
           onClick={() => dispatch(incrementIfOdd(incrementValue))}
         >
           Add If Odd
+        </button>
+
+        <button
+          className={styles.button}
+          onClick={() => dispatch(todoAsync())}
+        >
+          Fetch Todo
         </button>
       </div>
     </div>

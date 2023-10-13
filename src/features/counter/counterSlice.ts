@@ -2,14 +2,18 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState, AppThunk } from '../../app/store';
 import { fetchCount } from './counterAPI';
 
+import { httpRequest } from '../../services/httpRequest';
+
 export interface CounterState {
   value: number;
   status: 'idle' | 'loading' | 'failed';
+  todo: any
 }
 
 const initialState: CounterState = {
   value: 0,
   status: 'idle',
+  todo: null
 };
 
 // The function below is called a thunk and allows us to perform async logic. It
@@ -25,6 +29,14 @@ export const incrementAsync = createAsyncThunk(
     return response.data;
   }
 );
+
+export const todoAsync = createAsyncThunk(
+  'counter/fetchTodo',
+  async () => {
+    const response = await httpRequest('/user/62db688467947258f563cad9');
+    return response.data; 
+  }
+)
 
 export const counterSlice = createSlice({
   name: 'counter',
@@ -56,6 +68,9 @@ export const counterSlice = createSlice({
       .addCase(incrementAsync.fulfilled, (state, action) => {
         state.status = 'idle';
         state.value += action.payload;
+      })
+      .addCase(todoAsync.fulfilled, (state, action) => {
+        state.todo =  action.payload;
       });
   },
 });
